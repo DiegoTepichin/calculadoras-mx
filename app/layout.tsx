@@ -43,6 +43,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               no constituye asesoría fiscal o legal — verifica siempre con tu contador o abogado
               laboral antes de tomar decisiones.
             </p>
+            <p>
+              <Link href="/aviso-de-privacidad" className="underline hover:text-slate-700">
+                Aviso de privacidad
+              </Link>
+            </p>
             <p>© {new Date().getFullYear()} {SITE_NAME}. Hecho en México.</p>
           </div>
         </footer>
