@@ -3,6 +3,8 @@
 import { useMemo, useState } from "react";
 import { calcularFiniquito } from "@/lib/finiquito";
 import { diasVacacionesPorAntiguedad } from "@/data/constantes-2026";
+import { formatoMXN, parseMontoNoNegativo } from "@/lib/format";
+import CampoNumerico from "@/components/CampoNumerico";
 
 export default function FiniquitoForm() {
   const [salario, setSalario] = useState("500");
@@ -12,12 +14,12 @@ export default function FiniquitoForm() {
   const [diasLaborados, setDiasLaborados] = useState("180");
 
   const resultado = useMemo(() => {
-    const s = parseFloat(salario);
-    const dp = parseFloat(diasPendientes);
-    const a = parseFloat(anios);
-    const vt = parseFloat(vacacionesTomadas);
-    const dl = parseFloat(diasLaborados);
-    if ([s, dp, a, vt, dl].some((v) => Number.isNaN(v) || v < 0)) return null;
+    const s = parseMontoNoNegativo(salario);
+    const dp = parseMontoNoNegativo(diasPendientes);
+    const a = parseMontoNoNegativo(anios);
+    const vt = parseMontoNoNegativo(vacacionesTomadas);
+    const dl = parseMontoNoNegativo(diasLaborados);
+    if (s === null || dp === null || a === null || vt === null || dl === null) return null;
     return calcularFiniquito({
       salarioDiario: s,
       diasSalarioPendientes: dp,
@@ -28,58 +30,50 @@ export default function FiniquitoForm() {
   }, [salario, diasPendientes, anios, vacacionesTomadas, diasLaborados]);
 
   const diasQueTocan = useMemo(() => {
-    const a = parseFloat(anios);
-    return Number.isNaN(a) ? 0 : diasVacacionesPorAntiguedad(a);
+    const a = parseMontoNoNegativo(anios);
+    return a === null ? 0 : diasVacacionesPorAntiguedad(a);
   }, [anios]);
-
-  const formatoMXN = (n: number) =>
-    n.toLocaleString("es-MX", { style: "currency", currency: "MXN" });
 
   return (
     <div className="space-y-6">
       <div className="grid sm:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium mb-1">Salario diario (MXN)</label>
-          <input
-            type="text" inputMode="decimal" value={salario}
-            onChange={(e) => setSalario(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Días de salario pendientes de pago</label>
-          <input
-            type="text" inputMode="numeric" value={diasPendientes}
-            onChange={(e) => setDiasPendientes(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Años de antigüedad cumplidos</label>
-          <input
-            type="text" inputMode="numeric" value={anios}
-            onChange={(e) => setAnios(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-          />
-          <p className="text-xs text-slate-500 mt-1">Te tocan {diasQueTocan} días de vacaciones/año (Art. 76 LFT)</p>
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Días de vacaciones ya tomados este ciclo</label>
-          <input
-            type="text" inputMode="numeric" value={vacacionesTomadas}
-            onChange={(e) => setVacacionesTomadas(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-          />
-        </div>
-        <div className="sm:col-span-2">
-          <label className="block text-sm font-medium mb-1">Días laborados en el año calendario actual</label>
-          <input
-            type="text" inputMode="numeric" value={diasLaborados}
-            onChange={(e) => setDiasLaborados(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-          />
-          <p className="text-xs text-slate-500 mt-1">Para calcular el aguinaldo proporcional del año en curso</p>
-        </div>
+        <CampoNumerico
+          id="salario"
+          label="Salario diario (MXN)"
+          value={salario}
+          onChange={setSalario}
+        />
+        <CampoNumerico
+          id="diasPendientes"
+          label="Días de salario pendientes de pago"
+          value={diasPendientes}
+          onChange={setDiasPendientes}
+          inputMode="numeric"
+        />
+        <CampoNumerico
+          id="anios"
+          label="Años de antigüedad cumplidos"
+          value={anios}
+          onChange={setAnios}
+          inputMode="numeric"
+          hint={`Te tocan ${diasQueTocan} días de vacaciones/año (Art. 76 LFT)`}
+        />
+        <CampoNumerico
+          id="vacacionesTomadas"
+          label="Días de vacaciones ya tomados este ciclo"
+          value={vacacionesTomadas}
+          onChange={setVacacionesTomadas}
+          inputMode="numeric"
+        />
+        <CampoNumerico
+          id="diasLaborados"
+          label="Días laborados en el año calendario actual"
+          value={diasLaborados}
+          onChange={setDiasLaborados}
+          inputMode="numeric"
+          hint="Para calcular el aguinaldo proporcional del año en curso"
+          className="sm:col-span-2"
+        />
       </div>
 
       {resultado && (

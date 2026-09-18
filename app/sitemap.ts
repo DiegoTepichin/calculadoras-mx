@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
-
-const SITE_URL = "https://calculadoras-mx.netlify.app";
+import { SITE_URL } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const rutas = ["", "/calculadora/isr", "/calculadora/aguinaldo", "/calculadora/finiquito", "/calculadora/uma", "/aviso-de-privacidad"];

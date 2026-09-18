@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { UMA_2026 } from "@/data/constantes-2026";
+import { formatoMXN, parseMontoNoNegativo } from "@/lib/format";
+import CampoNumerico from "@/components/CampoNumerico";
 
 export default function UmaForm() {
   const [pesos, setPesos] = useState("10000");
@@ -10,18 +12,15 @@ export default function UmaForm() {
 
   const resultado = useMemo(() => {
     if (ultimoEditado === "pesos") {
-      const p = parseFloat(pesos);
-      if (Number.isNaN(p)) return null;
+      const p = parseMontoNoNegativo(pesos);
+      if (p === null) return null;
       return { pesos: p, umas: p / UMA_2026.mensual };
     } else {
-      const u = parseFloat(umas);
-      if (Number.isNaN(u)) return null;
+      const u = parseMontoNoNegativo(umas);
+      if (u === null) return null;
       return { pesos: u * UMA_2026.mensual, umas: u };
     }
   }, [pesos, umas, ultimoEditado]);
-
-  const formatoMXN = (n: number) =>
-    n.toLocaleString("es-MX", { style: "currency", currency: "MXN" });
 
   return (
     <div className="space-y-6">
@@ -33,22 +32,18 @@ export default function UmaForm() {
       </div>
 
       <div className="grid sm:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium mb-1">Pesos (MXN)</label>
-          <input
-            type="text" inputMode="decimal" value={pesos}
-            onChange={(e) => { setPesos(e.target.value); setUltimoEditado("pesos"); }}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Veces UMA (mensual)</label>
-          <input
-            type="text" inputMode="decimal" value={umas}
-            onChange={(e) => { setUmas(e.target.value); setUltimoEditado("umas"); }}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-          />
-        </div>
+        <CampoNumerico
+          id="pesos"
+          label="Pesos (MXN)"
+          value={pesos}
+          onChange={(v) => { setPesos(v); setUltimoEditado("pesos"); }}
+        />
+        <CampoNumerico
+          id="umas"
+          label="Veces UMA (mensual)"
+          value={umas}
+          onChange={(v) => { setUmas(v); setUltimoEditado("umas"); }}
+        />
       </div>
 
       {resultado && (

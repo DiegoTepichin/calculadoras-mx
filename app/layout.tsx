@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
-
-const SITE_NAME = "Calculadoras MX";
-const SITE_URL = "https://calculadoras-mx.netlify.app";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -14,6 +12,14 @@ export const metadata: Metadata = {
   description:
     "Calculadoras gratuitas y actualizadas 2026 de ISR mensual, aguinaldo, finiquito y vacaciones según la Ley Federal del Trabajo y el SAT.",
   robots: { index: true, follow: true },
+  openGraph: {
+    type: "website",
+    locale: "es_MX",
+    siteName: SITE_NAME,
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
