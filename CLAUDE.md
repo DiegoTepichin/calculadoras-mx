@@ -7,8 +7,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this is
 
 Calculadoras MX — a Next.js 16 (App Router) + TypeScript + Tailwind CSS site of Mexican
-tax/labor calculators (ISR, aguinaldo, finiquito, UMA), built as "Pilar 3" of a monetization lab
-(programmatic SEO). It ships as 100% static pages: no backend, no database, no server cost.
+tax/labor calculators (ISR, RESICO, nómina completa, aguinaldo, finiquito, UMA, cuotas IMSS
+obrero-patronales), built as "Pilar 3" of a monetization lab (programmatic SEO). It ships as
+100% static pages: no backend, no database, no server cost.
+
+Fiscal/labor figures in `data/*.ts` that aren't simple published tables (e.g. the IMSS employer
+CEAV bracket table, prima de riesgo por clase) were verified against ≥2-3 independent sources via
+web research before being hardcoded — see the source comments at the top of each `data/*.ts`
+file. Treat any new fiscal/labor constant the same way before adding it: this site's only real
+liability risk is publishing wrong numbers that people use for financial decisions.
 
 ## Commands
 
@@ -38,19 +45,26 @@ and prefer several small commits over one large one.
   `constantes-2026.ts`); when the official tables change (SAT/INEGI/CONASAMI, typically
   Jan/Feb), add a new `*-YYYY.ts` file rather than overwriting the old one, and repoint the
   imports in `lib/*`.
-- **`lib/*.ts`** — pure calculation functions (`calcularISRMensual`, `calcularAguinaldo`,
-  `calcularFiniquito`) that import from `data/*` and contain no React/UI code. This is where the
-  actual tax/labor logic and its legal citations (LFT articles, LISR articles) live, and where
-  the matching `*.test.ts` files (Vitest) live alongside each module. `lib/format.ts` holds the
-  shared `formatoMXN`/`parseMontoNoNegativo` helpers; `lib/site.ts` is the single source for
-  `SITE_NAME`/`SITE_URL`; `lib/og.tsx` generates the Open Graph preview images.
-- **`components/CampoNumerico.tsx`** — the one shared numeric input (label + input + optional
-  hint), used by every calculator form. Any new numeric field should use it rather than
-  hand-rolling an `<input>`, to keep label/id association (a11y) and styling consistent.
+- **`lib/*.ts`** — pure calculation functions (`calcularISRMensual`, `calcularISRResico`,
+  `calcularAguinaldo`, `calcularFiniquito`, `calcularCuotaObreraDiaria`/`calcularCuotaPatronalDiaria`)
+  that import from `data/*` and contain no React/UI code. This is where the actual tax/labor
+  logic and its legal citations (LFT/LISR/LSS articles) live, and where the matching `*.test.ts`
+  files (Vitest) live alongside each module. `lib/tarifa.ts` has the shared `buscarRenglon()` used
+  by both ISR and RESICO (any new bracket-based tariff should reuse it, not reimplement the
+  lookup). `lib/format.ts` holds `formatoMXN`/`parseMontoNoNegativo`; `lib/site.ts` is the single
+  source for `SITE_NAME`/`SITE_URL`; `lib/og.tsx` generates the Open Graph preview images.
+  "Nómina completa" and the IMSS patronal calculator both build on `lib/imss.ts` rather than each
+  reimplementing IMSS math — any new calculator needing IMSS quotas should do the same.
+- **`components/CampoNumerico.tsx`** / **`CampoSelect.tsx`** — the shared numeric input and
+  dropdown (label + control + optional hint), used by every calculator form. Any new field should
+  use one of these rather than hand-rolling an `<input>`/`<select>`, to keep label/id association
+  (a11y) and styling consistent.
 - **`components/*Form.tsx`** — one `"use client"` form component per calculator, built from
-  `CampoNumerico` fields. Each holds its own input state and calls the matching `lib/*` function
-  synchronously (via `useMemo`, no debouncing/validation library). No shared form-orchestration
-  abstraction exists across calculators — only the field component is shared, by design.
+  `CampoNumerico`/`CampoSelect` fields. Each holds its own input state and calls the matching
+  `lib/*` function(s) synchronously (via `useMemo`, no debouncing/validation library), and renders
+  a `<details>` "Ver cómo se calculó" block substituting the actual numbers into the formula. No
+  shared form-orchestration abstraction exists across calculators — only the field components and
+  the desglose pattern are shared, by design.
 - **`app/calculadora/<nombre>/page.tsx`** — one route per calculator. Each is a server component
   that exports `metadata` (title/description/canonical) for SEO, renders the intro copy + the
   matching form, and an `<article>` "how it's calculated" explainer section for topical
