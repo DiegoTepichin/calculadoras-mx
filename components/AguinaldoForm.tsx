@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { calcularAguinaldo } from "@/lib/aguinaldo";
+import { formatoMXN, parseMontoNoNegativo } from "@/lib/format";
+import CampoNumerico from "@/components/CampoNumerico";
 
 export default function AguinaldoForm() {
   const [salario, setSalario] = useState("500");
@@ -9,50 +11,37 @@ export default function AguinaldoForm() {
   const [diasAguinaldo, setDiasAguinaldo] = useState("15");
 
   const resultado = useMemo(() => {
-    const s = parseFloat(salario);
-    const d = parseFloat(dias);
-    const da = parseFloat(diasAguinaldo);
-    if ([s, d, da].some((v) => Number.isNaN(v) || v < 0)) return null;
+    const s = parseMontoNoNegativo(salario);
+    const d = parseMontoNoNegativo(dias);
+    const da = parseMontoNoNegativo(diasAguinaldo);
+    if (s === null || d === null || da === null) return null;
     return calcularAguinaldo(s, d, da);
   }, [salario, dias, diasAguinaldo]);
-
-  const formatoMXN = (n: number) =>
-    n.toLocaleString("es-MX", { style: "currency", currency: "MXN" });
 
   return (
     <div className="space-y-6">
       <div className="grid sm:grid-cols-3 gap-4">
-        <div>
-          <label className="block text-sm font-medium mb-1">Salario diario (MXN)</label>
-          <input
-            type="text"
-            inputMode="decimal"
-            value={salario}
-            onChange={(e) => setSalario(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Días laborados en el año</label>
-          <input
-            type="text"
-            inputMode="numeric"
-            value={dias}
-            onChange={(e) => setDias(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Días de aguinaldo/año</label>
-          <input
-            type="text"
-            inputMode="numeric"
-            value={diasAguinaldo}
-            onChange={(e) => setDiasAguinaldo(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-          />
-          <p className="text-xs text-slate-500 mt-1">Mínimo legal: 15 días (Art. 87 LFT)</p>
-        </div>
+        <CampoNumerico
+          id="salario"
+          label="Salario diario (MXN)"
+          value={salario}
+          onChange={setSalario}
+        />
+        <CampoNumerico
+          id="dias"
+          label="Días laborados en el año"
+          value={dias}
+          onChange={setDias}
+          inputMode="numeric"
+        />
+        <CampoNumerico
+          id="diasAguinaldo"
+          label="Días de aguinaldo/año"
+          value={diasAguinaldo}
+          onChange={setDiasAguinaldo}
+          inputMode="numeric"
+          hint="Mínimo legal: 15 días (Art. 87 LFT)"
+        />
       </div>
 
       {resultado && (
