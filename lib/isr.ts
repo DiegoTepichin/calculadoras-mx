@@ -1,4 +1,5 @@
 import { TARIFA_ISR_MENSUAL_2026, SUBSIDIO_EMPLEO_MENSUAL_2026 } from "@/data/isr-2026";
+import { buscarRenglon } from "@/lib/tarifa";
 
 export interface ResultadoISR {
   ingresoMensual: number;
@@ -8,25 +9,12 @@ export interface ResultadoISR {
   ingresoNeto: number;
   tasaEfectiva: number; // isrAPagar / ingresoMensual
   renglonAplicado: number; // índice del renglón de tarifa usado (1-based, para transparencia)
-}
-
-function buscarRenglon<T extends { limiteInferior: number; limiteSuperior: number }>(
-  tabla: T[],
-  ingreso: number
-): { renglon: T; indice: number } {
-  for (let i = 0; i < tabla.length; i++) {
-    if (ingreso >= tabla[i].limiteInferior && ingreso <= tabla[i].limiteSuperior) {
-      return { renglon: tabla[i], indice: i + 1 };
-    }
-  }
-  // Ingresos por debajo del primer límite inferior (p. ej. 0) van al primer renglón;
-  // solo un ingreso mayor al límite superior del último renglón (que es Infinity, así
-  // que en la práctica esto no ocurre) caería en el último.
-  if (ingreso < tabla[0].limiteInferior) {
-    return { renglon: tabla[0], indice: 1 };
-  }
-  const ultimo = tabla[tabla.length - 1];
-  return { renglon: ultimo, indice: tabla.length };
+  // Valores crudos del renglón de tarifa aplicado, para mostrar la fórmula sustituida en la UI
+  // sin tener que reimplementar buscarRenglon() en el componente.
+  limiteInferiorRenglon: number;
+  cuotaFijaRenglon: number;
+  porcentajeExcedenteRenglon: number;
+  excedente: number;
 }
 
 /**
@@ -55,5 +43,9 @@ export function calcularISRMensual(ingresoMensual: number): ResultadoISR {
     ingresoNeto: Math.round(ingresoNeto * 100) / 100,
     tasaEfectiva: ingreso > 0 ? isrAPagar / ingreso : 0,
     renglonAplicado: indice,
+    limiteInferiorRenglon: renglonISR.limiteInferior,
+    cuotaFijaRenglon: renglonISR.cuotaFija,
+    porcentajeExcedenteRenglon: renglonISR.porcentajeExcedente,
+    excedente: Math.round(excedente * 100) / 100,
   };
 }
