@@ -19,6 +19,12 @@ function buscarRenglon<T extends { limiteInferior: number; limiteSuperior: numbe
       return { renglon: tabla[i], indice: i + 1 };
     }
   }
+  // Ingresos por debajo del primer límite inferior (p. ej. 0) van al primer renglón;
+  // solo un ingreso mayor al límite superior del último renglón (que es Infinity, así
+  // que en la práctica esto no ocurre) caería en el último.
+  if (ingreso < tabla[0].limiteInferior) {
+    return { renglon: tabla[0], indice: 1 };
+  }
   const ultimo = tabla[tabla.length - 1];
   return { renglon: ultimo, indice: tabla.length };
 }
