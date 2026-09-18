@@ -12,6 +12,11 @@ const calculadoras = [
     descripcion: "Calcula tu ISR mensual bajo el Régimen Simplificado de Confianza con la tasa fija de tu rango de ingresos.",
   },
   {
+    href: "/calculadora/nomina",
+    titulo: "Calculadora de nómina completa 2026",
+    descripcion: "Calcula tu sueldo neto: ISR, cuota obrera del IMSS e Infonavit si tienes crédito, con desglose completo.",
+  },
+  {
     href: "/calculadora/aguinaldo",
     titulo: "Calculadora de aguinaldo 2026",
     descripcion: "Calcula tu aguinaldo proporcional según los días que trabajaste en el año (Art. 87 LFT).",
