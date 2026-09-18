@@ -22,6 +22,15 @@ npm run dev
 # abre http://localhost:3000
 ```
 
+## Calidad
+```bash
+npm run lint   # eslint
+npm run test   # vitest — pruebas de la lógica fiscal/laboral en lib/*.ts
+npm run build  # además valida tipos y que todas las páginas sigan siendo ○ Static
+```
+Un workflow de GitHub Actions (`.github/workflows/ci.yml`) corre estos tres comandos en cada
+push/PR a `main`.
+
 ## Cómo desplegar gratis (elige una opción)
 
 ### Opción A — Vercel (recomendada, cero configuración)
@@ -30,7 +39,8 @@ npm run dev
 3. "Add New Project" → importa el repo → Vercel detecta Next.js automáticamente → Deploy.
 4. Cada `git push` a la rama principal vuelve a desplegar automáticamente, gratis.
 5. Cuando tengas dominio propio, agrégalo en Project Settings → Domains, y actualiza
-   `SITE_URL` en `app/layout.tsx`, `app/sitemap.ts` y `app/robots.ts`.
+   `SITE_URL` en `lib/site.ts` (único lugar que hay que tocar; lo usan `layout.tsx`,
+   `sitemap.ts` y `robots.ts`).
 
 ### Opción B — Cloudflare Pages
 1. Sube el proyecto a GitHub.

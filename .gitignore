@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# assets de trabajo para distribución en redes (no forman parte del sitio)
+/distribucion-social/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
