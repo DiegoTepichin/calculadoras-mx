@@ -47,11 +47,32 @@ export default function UmaForm() {
       </div>
 
       {resultado && (
-        <div className="rounded-xl border border-slate-200 p-5 flex justify-between text-base">
-          <span className="font-semibold">Equivalencia</span>
-          <span className="font-bold text-emerald-700">
-            {formatoMXN(resultado.pesos)} = {resultado.umas.toFixed(4)} UMA
-          </span>
+        <div className="rounded-xl border border-slate-200 p-5 space-y-3">
+          <div className="flex justify-between text-base">
+            <span className="font-semibold">Equivalencia</span>
+            <span className="font-bold text-emerald-700">
+              {formatoMXN(resultado.pesos)} = {resultado.umas.toFixed(4)} UMA
+            </span>
+          </div>
+
+          <details className="pt-2 border-t border-slate-100">
+            <summary className="cursor-pointer text-sm font-medium text-emerald-700">
+              Ver cómo se calculó
+            </summary>
+            <p className="mt-3 text-sm text-slate-600">
+              {ultimoEditado === "pesos" ? (
+                <>
+                  UMA = {formatoMXN(resultado.pesos)} ÷ {formatoMXN(UMA_2026.mensual)} (UMA
+                  mensual) = {resultado.umas.toFixed(4)} UMA
+                </>
+              ) : (
+                <>
+                  Pesos = {resultado.umas} UMA × {formatoMXN(UMA_2026.mensual)} (UMA mensual) ={" "}
+                  {formatoMXN(resultado.pesos)}
+                </>
+              )}
+            </p>
+          </details>
         </div>
       )}
     </div>
