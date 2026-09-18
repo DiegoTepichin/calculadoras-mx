@@ -7,6 +7,11 @@ const calculadoras = [
     descripcion: "Calcula la retención de ISR de tu sueldo mensual con la tarifa vigente y el subsidio al empleo.",
   },
   {
+    href: "/calculadora/resico",
+    titulo: "Calculadora RESICO 2026",
+    descripcion: "Calcula tu ISR mensual bajo el Régimen Simplificado de Confianza con la tasa fija de tu rango de ingresos.",
+  },
+  {
     href: "/calculadora/aguinaldo",
     titulo: "Calculadora de aguinaldo 2026",
     descripcion: "Calcula tu aguinaldo proporcional según los días que trabajaste en el año (Art. 87 LFT).",
