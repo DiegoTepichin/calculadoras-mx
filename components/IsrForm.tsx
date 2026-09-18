@@ -49,6 +49,34 @@ export default function IsrForm() {
             Tasa efectiva de ISR: {(resultado.tasaEfectiva * 100).toFixed(2)}%. No incluye
             retenciones de IMSS ni Infonavit, que se calculan por separado.
           </p>
+
+          <details className="pt-2 border-t border-slate-100">
+            <summary className="cursor-pointer text-sm font-medium text-emerald-700">
+              Ver cómo se calculó
+            </summary>
+            <ol className="mt-3 space-y-2 text-sm text-slate-600 list-decimal pl-5">
+              <li>
+                Tu ingreso ({formatoMXN(resultado.ingresoMensual)}) cae en el renglón{" "}
+                {resultado.renglonAplicado} de la tarifa (límite inferior{" "}
+                {formatoMXN(resultado.limiteInferiorRenglon)}).
+              </li>
+              <li>
+                Excedente = {formatoMXN(resultado.ingresoMensual)} −{" "}
+                {formatoMXN(resultado.limiteInferiorRenglon)} = {formatoMXN(resultado.excedente)}
+              </li>
+              <li>
+                ISR causado = {formatoMXN(resultado.cuotaFijaRenglon)} (cuota fija) +{" "}
+                {formatoMXN(resultado.excedente)} ×{" "}
+                {(resultado.porcentajeExcedenteRenglon * 100).toFixed(2)}% ={" "}
+                {formatoMXN(resultado.isrCausado)}
+              </li>
+              <li>
+                ISR a retener = {formatoMXN(resultado.isrCausado)} −{" "}
+                {formatoMXN(resultado.subsidioAplicado)} (subsidio) ={" "}
+                {formatoMXN(resultado.isrAPagar)}
+              </li>
+            </ol>
+          </details>
         </div>
       )}
     </div>
