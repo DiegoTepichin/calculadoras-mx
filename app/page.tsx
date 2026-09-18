@@ -31,6 +31,11 @@ const calculadoras = [
     titulo: "Convertidor de UMA 2026",
     descripcion: "Convierte pesos a UMA y viceversa con el valor oficial vigente de la UMA 2026.",
   },
+  {
+    href: "/calculadora/imss-patronal",
+    titulo: "Calculadora de cuotas IMSS obrero-patronales 2026",
+    descripcion: "Para empleadores: calcula la cuota patronal del IMSS rama por rama según el SBC y la clase de riesgo.",
+  },
 ];
 
 export default function HomePage() {

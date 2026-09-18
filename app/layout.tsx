@@ -38,6 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/calculadora/aguinaldo" className="hover:text-emerald-600">Aguinaldo</Link>
               <Link href="/calculadora/finiquito" className="hover:text-emerald-600">Finiquito</Link>
               <Link href="/calculadora/uma" className="hover:text-emerald-600">UMA</Link>
+              <Link href="/calculadora/imss-patronal" className="hover:text-emerald-600">IMSS patronal</Link>
             </div>
           </nav>
         </header>
