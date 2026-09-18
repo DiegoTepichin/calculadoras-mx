@@ -23,6 +23,13 @@ npm run test     # vitest run — unit tests for lib/*.ts and data/*.ts
 Run a single test file with `npx vitest run lib/isr.test.ts`. CI (`.github/workflows/ci.yml`)
 runs lint, `tsc --noEmit`, tests, and build on every push/PR to `main`.
 
+## Workflow
+
+After every significant change (a bug fix, a new/refactored feature, a dependency bump, etc.),
+create a git commit for it — don't let multiple unrelated changes pile up uncommitted. Group
+each commit around one coherent piece of work with a clear message, run lint/test/build first,
+and prefer several small commits over one large one.
+
 ## Architecture
 
 - **`data/*.ts`** — the source of truth for all tax/labor figures for the current year (ISR
