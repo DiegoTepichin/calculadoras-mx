@@ -2,35 +2,28 @@
 
 import { useMemo, useState } from "react";
 import { calcularISRMensual } from "@/lib/isr";
+import { formatoMXN, parseMontoNoNegativo } from "@/lib/format";
+import CampoNumerico from "@/components/CampoNumerico";
 
 export default function IsrForm() {
   const [ingreso, setIngreso] = useState<string>("15000");
 
   const resultado = useMemo(() => {
-    const valor = parseFloat(ingreso.replace(/,/g, ""));
-    if (Number.isNaN(valor) || valor < 0) return null;
+    const valor = parseMontoNoNegativo(ingreso);
+    if (valor === null) return null;
     return calcularISRMensual(valor);
   }, [ingreso]);
 
-  const formatoMXN = (n: number) =>
-    n.toLocaleString("es-MX", { style: "currency", currency: "MXN" });
-
   return (
     <div className="space-y-6">
-      <div>
-        <label htmlFor="ingreso" className="block text-sm font-medium mb-1">
-          Ingreso mensual bruto (MXN)
-        </label>
-        <input
-          id="ingreso"
-          type="text"
-          inputMode="decimal"
-          value={ingreso}
-          onChange={(e) => setIngreso(e.target.value)}
-          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-          placeholder="15000"
-        />
-      </div>
+      <CampoNumerico
+        id="ingreso"
+        label="Ingreso mensual bruto (MXN)"
+        value={ingreso}
+        onChange={setIngreso}
+        placeholder="15000"
+        grande
+      />
 
       {resultado && (
         <div className="rounded-xl border border-slate-200 p-5 space-y-3">
