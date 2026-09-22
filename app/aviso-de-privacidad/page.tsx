@@ -13,17 +13,17 @@ export default function AvisoPrivacidadPage() {
       <p className="text-sm text-slate-500 mb-6">Última actualización: septiembre de 2026.</p>
 
       <p>
-        Calculadoras MX (el sitio) es un proyecto informativo operado desde México. Este
-        aviso describe cómo se maneja la información de quienes visitan el sitio, en
-        cumplimiento de la Ley Federal de Protección de Datos Personales en Posesión de los
-        Particulares (LFPDPPP).
+        Calculadoras MX (el sitio) es un proyecto informativo de calculadoras fiscales y
+        laborales para México, Colombia y otros países de Latinoamérica. Este aviso describe
+        cómo se maneja la información de quienes visitan el sitio, sin importar desde qué país
+        lo hagan.
       </p>
 
       <h2 className="text-lg font-semibold mt-6 mb-2">¿Qué datos recabamos?</h2>
       <p>
-        Las calculadoras (ISR, aguinaldo, finiquito, UMA) procesan los números que ingresas
-        únicamente en tu navegador (localmente, en tu dispositivo). Esos datos no se envían a
-        ningún servidor ni se almacenan por nosotros.
+        Las calculadoras (ISR, RESICO, retención en la fuente, aguinaldo/prima, finiquito, UMA/UVT,
+        etc.) procesan los números que ingresas únicamente en tu navegador (localmente, en tu
+        dispositivo). Esos datos no se envían a ningún servidor ni se almacenan por nosotros.
       </p>
 
       <h2 className="text-lg font-semibold mt-6 mb-2">Cookies y publicidad</h2>
@@ -50,11 +50,13 @@ export default function AvisoPrivacidadPage() {
         específicas.
       </p>
 
-      <h2 className="text-lg font-semibold mt-6 mb-2">Derechos ARCO</h2>
+      <h2 className="text-lg font-semibold mt-6 mb-2">Tus derechos sobre tus datos</h2>
       <p>
-        Como no recabamos datos personales identificables directamente en el sitio, no
-        mantenemos una base de datos de usuarios. Si tienes dudas sobre este aviso, puedes
-        contactarnos a través de los medios indicados en el sitio.
+        Como no recabamos datos personales identificables directamente en el sitio (ni en México,
+        bajo la LFPDPPP, ni en Colombia, bajo la Ley 1581 de 2012, ni bajo leyes similares de otros
+        países), no mantenemos una base de datos de usuarios sobre la cual ejercer derechos de
+        acceso, rectificación o cancelación. Si tienes dudas sobre este aviso, puedes contactarnos
+        a través de los medios indicados en el sitio.
       </p>
 
       <h2 className="text-lg font-semibold mt-6 mb-2">Cambios a este aviso</h2>

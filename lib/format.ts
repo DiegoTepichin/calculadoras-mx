@@ -1,5 +1,21 @@
+export function formatoMoneda(
+  n: number,
+  opts: { locale: string; currency: string; decimales?: number }
+): string {
+  return n.toLocaleString(opts.locale, {
+    style: "currency",
+    currency: opts.currency,
+    minimumFractionDigits: opts.decimales,
+    maximumFractionDigits: opts.decimales,
+  });
+}
+
 export function formatoMXN(n: number): string {
-  return n.toLocaleString("es-MX", { style: "currency", currency: "MXN" });
+  return formatoMoneda(n, { locale: "es-MX", currency: "MXN" });
+}
+
+export function formatoCOP(n: number): string {
+  return formatoMoneda(n, { locale: "es-CO", currency: "COP", decimales: 0 });
 }
 
 /**
