@@ -1,16 +1,29 @@
 import type { Metadata } from "next";
 import ImssPatronalForm from "@/components/ImssPatronalForm";
+import CalculadorasRelacionadas from "@/components/CalculadorasRelacionadas";
+import { JsonLd } from "@/lib/jsonld";
+import { webApplicationSchema, breadcrumbSchema } from "@/lib/seo";
+
+const TITULO = "Calculadora de cuotas IMSS obrero-patronales 2026";
+const DESCRIPCION =
+  "Calcula cuánto paga tu empresa de cuotas patronales al IMSS por cada trabajador: Enfermedades y Maternidad, Invalidez y Vida, Cesantía y Vejez, Riesgo de Trabajo e Infonavit. Desglose completo 2026.";
 
 export const metadata: Metadata = {
-  title: "Calculadora de cuotas IMSS obrero-patronales 2026",
-  description:
-    "Calcula cuánto paga tu empresa de cuotas patronales al IMSS por cada trabajador: Enfermedades y Maternidad, Invalidez y Vida, Cesantía y Vejez, Riesgo de Trabajo e Infonavit. Desglose completo 2026.",
+  title: TITULO,
+  description: DESCRIPCION,
   alternates: { canonical: "/calculadora/imss-patronal" },
 };
 
 export default function ImssPatronalPage() {
   return (
     <div>
+      <JsonLd data={webApplicationSchema({ nombre: TITULO, descripcion: DESCRIPCION, ruta: "/calculadora/imss-patronal" })} />
+      <JsonLd
+        data={breadcrumbSchema([
+          { nombre: "Inicio", ruta: "/" },
+          { nombre: TITULO, ruta: "/calculadora/imss-patronal" },
+        ])}
+      />
       <h1 className="text-2xl font-bold tracking-tight mb-2">
         Calculadora de cuotas IMSS obrero-patronales 2026
       </h1>
@@ -50,6 +63,13 @@ export default function ImssPatronalPage() {
           herramienta de referencia — verifica las cifras exactas de tu empresa con tu contador.
         </p>
       </article>
+
+      <CalculadorasRelacionadas
+        items={[
+          { href: "/calculadora/nomina", titulo: "Calculadora de nómina completa 2026" },
+          { href: "/calculadora/uma", titulo: "Convertidor de UMA 2026" },
+        ]}
+      />
     </div>
   );
 }

@@ -1,16 +1,29 @@
 import type { Metadata } from "next";
 import AguinaldoForm from "@/components/AguinaldoForm";
+import CalculadorasRelacionadas from "@/components/CalculadorasRelacionadas";
+import { JsonLd } from "@/lib/jsonld";
+import { webApplicationSchema, breadcrumbSchema } from "@/lib/seo";
+
+const TITULO = "Calculadora de aguinaldo 2026";
+const DESCRIPCION =
+  "Calcula tu aguinaldo proporcional 2026 según los días trabajados en el año, conforme al Art. 87 de la Ley Federal del Trabajo.";
 
 export const metadata: Metadata = {
-  title: "Calculadora de aguinaldo 2026",
-  description:
-    "Calcula tu aguinaldo proporcional 2026 según los días trabajados en el año, conforme al Art. 87 de la Ley Federal del Trabajo.",
+  title: TITULO,
+  description: DESCRIPCION,
   alternates: { canonical: "/calculadora/aguinaldo" },
 };
 
 export default function AguinaldoPage() {
   return (
     <div>
+      <JsonLd data={webApplicationSchema({ nombre: TITULO, descripcion: DESCRIPCION, ruta: "/calculadora/aguinaldo" })} />
+      <JsonLd
+        data={breadcrumbSchema([
+          { nombre: "Inicio", ruta: "/" },
+          { nombre: TITULO, ruta: "/calculadora/aguinaldo" },
+        ])}
+      />
       <h1 className="text-2xl font-bold tracking-tight mb-2">Calculadora de aguinaldo 2026</h1>
       <p className="text-slate-600 mb-8 max-w-2xl">
         El aguinaldo es un derecho laboral: mínimo 15 días de salario por año completo (Art. 87
@@ -43,6 +56,13 @@ export default function AguinaldoPage() {
           gravables del mes en que se paga.
         </p>
       </article>
+
+      <CalculadorasRelacionadas
+        items={[
+          { href: "/calculadora/finiquito", titulo: "Calculadora de finiquito 2026" },
+          { href: "/calculadora/uma", titulo: "Convertidor de UMA 2026" },
+        ]}
+      />
     </div>
   );
 }
