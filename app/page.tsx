@@ -44,10 +44,15 @@ export default function HomePage() {
       <h1 className="text-3xl font-bold tracking-tight mb-3">
         Calculadoras fiscales y laborales de México 2026
       </h1>
-      <p className="text-slate-600 mb-10 max-w-2xl">
+      <p className="text-slate-600 mb-4 max-w-2xl">
         Herramientas gratuitas y actualizadas con la tarifa de ISR 2026, la UMA 2026, el salario
         mínimo 2026 y la tabla de vacaciones de la Ley Federal del Trabajo. Sin registro, sin
         anuncios intrusivos, resultados instantáneos.
+      </p>
+      <p className="text-sm mb-10">
+        <Link href="/co" className="text-emerald-700 underline hover:text-emerald-800">
+          ¿Buscas calculadoras para Colombia? →
+        </Link>
       </p>
       <div className="grid gap-4 sm:grid-cols-2">
         {calculadoras.map((c) => (
