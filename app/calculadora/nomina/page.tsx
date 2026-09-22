@@ -1,16 +1,29 @@
 import type { Metadata } from "next";
 import NominaForm from "@/components/NominaForm";
+import CalculadorasRelacionadas from "@/components/CalculadorasRelacionadas";
+import { JsonLd } from "@/lib/jsonld";
+import { webApplicationSchema, breadcrumbSchema } from "@/lib/seo";
+
+const TITULO = "Calculadora de nómina completa 2026 (ISR + IMSS)";
+const DESCRIPCION =
+  "Calcula tu sueldo neto 2026: ISR mensual, cuota obrera del IMSS y descuento de Infonavit si tienes crédito. Desglose completo, gratis e instantáneo.";
 
 export const metadata: Metadata = {
-  title: "Calculadora de nómina completa 2026 (ISR + IMSS)",
-  description:
-    "Calcula tu sueldo neto 2026: ISR mensual, cuota obrera del IMSS y descuento de Infonavit si tienes crédito. Desglose completo, gratis e instantáneo.",
+  title: TITULO,
+  description: DESCRIPCION,
   alternates: { canonical: "/calculadora/nomina" },
 };
 
 export default function NominaPage() {
   return (
     <div>
+      <JsonLd data={webApplicationSchema({ nombre: TITULO, descripcion: DESCRIPCION, ruta: "/calculadora/nomina" })} />
+      <JsonLd
+        data={breadcrumbSchema([
+          { nombre: "Inicio", ruta: "/" },
+          { nombre: "Calculadora de nómina completa 2026", ruta: "/calculadora/nomina" },
+        ])}
+      />
       <h1 className="text-2xl font-bold tracking-tight mb-2">Calculadora de nómina completa 2026</h1>
       <p className="text-slate-600 mb-8 max-w-2xl">
         Ingresa tu salario diario para ver todo lo que se descuenta de tu recibo de nómina — ISR
@@ -47,6 +60,14 @@ export default function NominaPage() {
           voluntario, préstamos, seguros privados, etc.).
         </p>
       </article>
+
+      <CalculadorasRelacionadas
+        items={[
+          { href: "/calculadora/isr", titulo: "Calculadora de ISR mensual 2026" },
+          { href: "/calculadora/imss-patronal", titulo: "Calculadora de cuotas IMSS obrero-patronales 2026" },
+          { href: "/calculadora/finiquito", titulo: "Calculadora de finiquito 2026" },
+        ]}
+      />
     </div>
   );
 }

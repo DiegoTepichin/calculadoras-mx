@@ -1,16 +1,29 @@
 import type { Metadata } from "next";
 import UmaForm from "@/components/UmaForm";
+import CalculadorasRelacionadas from "@/components/CalculadorasRelacionadas";
+import { JsonLd } from "@/lib/jsonld";
+import { webApplicationSchema, breadcrumbSchema } from "@/lib/seo";
+
+const TITULO = "Convertidor de UMA 2026 (pesos a UMA)";
+const DESCRIPCION =
+  "Convierte pesos mexicanos a UMA y viceversa con el valor oficial de la UMA 2026 (INEGI). Consulta el valor diario, mensual y anual.";
 
 export const metadata: Metadata = {
-  title: "Convertidor de UMA 2026 (pesos a UMA)",
-  description:
-    "Convierte pesos mexicanos a UMA y viceversa con el valor oficial de la UMA 2026 (INEGI). Consulta el valor diario, mensual y anual.",
+  title: TITULO,
+  description: DESCRIPCION,
   alternates: { canonical: "/calculadora/uma" },
 };
 
 export default function UmaPage() {
   return (
     <div>
+      <JsonLd data={webApplicationSchema({ nombre: TITULO, descripcion: DESCRIPCION, ruta: "/calculadora/uma" })} />
+      <JsonLd
+        data={breadcrumbSchema([
+          { nombre: "Inicio", ruta: "/" },
+          { nombre: "Convertidor de UMA 2026", ruta: "/calculadora/uma" },
+        ])}
+      />
       <h1 className="text-2xl font-bold tracking-tight mb-2">Convertidor de UMA 2026</h1>
       <p className="text-slate-600 mb-8 max-w-2xl">
         La Unidad de Medida y Actualización (UMA) se usa para calcular multas, créditos y
@@ -42,6 +55,13 @@ export default function UmaPage() {
           publica el ajuste por inflación de diciembre.
         </p>
       </article>
+
+      <CalculadorasRelacionadas
+        items={[
+          { href: "/calculadora/isr", titulo: "Calculadora de ISR mensual 2026" },
+          { href: "/calculadora/imss-patronal", titulo: "Calculadora de cuotas IMSS obrero-patronales 2026" },
+        ]}
+      />
     </div>
   );
 }

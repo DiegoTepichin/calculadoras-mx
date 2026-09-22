@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { JsonLd } from "@/lib/jsonld";
+import { websiteSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -26,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es-MX">
       <body className="min-h-screen flex flex-col bg-white text-slate-900 antialiased">
+        <JsonLd data={websiteSchema()} />
         <header className="border-b border-slate-200">
           <nav className="mx-auto max-w-4xl px-4 py-4 flex items-center justify-between">
             <Link href="/" className="font-semibold text-lg tracking-tight">
