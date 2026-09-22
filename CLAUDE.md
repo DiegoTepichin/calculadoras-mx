@@ -6,10 +6,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Calculadoras MX — a Next.js 16 (App Router) + TypeScript + Tailwind CSS site of Mexican
-tax/labor calculators (ISR, RESICO, nómina completa, aguinaldo, finiquito, UMA, cuotas IMSS
-obrero-patronales), built as "Pilar 3" of a monetization lab (programmatic SEO). It ships as
-100% static pages: no backend, no database, no server cost.
+Calculadoras MX — a Next.js 16 (App Router) + TypeScript + Tailwind CSS site of LatAm
+tax/labor calculators, built as "Pilar 3" of a monetization lab (programmatic SEO). It ships as
+100% static pages: no backend, no database, no server cost. It started Mexico-only (ISR, RESICO,
+nómina completa, aguinaldo, finiquito, UMA, cuotas IMSS obrero-patronales) and is expanding to
+other Spanish-speaking LatAm countries one at a time (Colombia is the first: retención en la
+fuente, prima de servicios, UVT) — see "Multi-country" below before assuming everything is
+Mexico-specific.
 
 Fiscal/labor figures in `data/*.ts` that aren't simple published tables (e.g. the IMSS employer
 CEAV bracket table, prima de riesgo por clase) were verified against ≥2-3 independent sources via
@@ -74,11 +77,39 @@ and prefer several small commits over one large one.
   each a thin wrapper calling `generarImagenOG(titulo)` from `lib/og.tsx` via `next/og`'s
   `ImageResponse`. Statically generated at build time — no external design asset needed. Add one
   for any new page.
-- **`app/layout.tsx`** — global chrome (header nav, footer disclaimer) and the base `metadata`
-  (title template, `openGraph`, `twitter`), all built from `lib/site.ts`. `app/sitemap.ts` still
-  hardcodes the route list — when adding a calculator route, update the nav in `layout.tsx` and
-  the `rutas` array in `sitemap.ts`.
-- All copy and UI strings are in Spanish (es-MX); numbers/currency are formatted with the shared
-  `formatoMXN` helper (`lib/format.ts`).
-- This site is a reference tool, not tax/legal advice — that disclaimer is load-bearing copy in
-  `app/layout.tsx`'s footer and should be preserved on any related changes.
+- **`app/layout.tsx`** — the root `<html>/<body>`, site-wide `<script>`/JSON-LD, and base
+  `metadata` (title template, `openGraph`, `twitter`), all built from `lib/site.ts`. It renders
+  `<SiteChrome>` for the actual header/footer (see "Multi-country" below). `app/sitemap.ts` still
+  hardcodes the route list — when adding a calculator route, update `sitemap.ts`'s `rutas` array
+  (and the nav inside `SiteChrome.tsx` for that country).
+- All copy and UI strings are in Spanish; numbers/currency are formatted with the shared
+  `formatoMoneda`/`formatoMXN`/`formatoCOP` helpers (`lib/format.ts`) — add a new `formatoXXX`
+  wrapper over `formatoMoneda` for any new country's currency rather than hardcoding
+  `toLocaleString` calls in components.
+- Each country's site is a reference tool, not tax/legal advice — that disclaimer is load-bearing
+  copy in `components/SiteChrome.tsx`'s footer (per-country text) and should be preserved on any
+  related changes.
+
+## Multi-country
+
+- **Mexico's routes are unprefixed and must stay that way** (`/calculadora/isr`, etc.) — they're
+  indexed in Search Console and were live during AdSense review; don't move or rename them for
+  architectural symmetry with other countries.
+- **Every other country lives under `/<cc>` ** (ISO 3166-1 alpha-2, e.g. `/co`), mirrored in
+  `data/<cc>/`, `lib/<cc>/`, `components/<cc>/`, and `app/<cc>/`. Mexico's `data/*.ts`/`lib/*.ts`
+  stay unprefixed at the root — don't retroactively namespace them into `data/mx/`.
+- **`components/SiteChrome.tsx`** (a `"use client"` component used by the root layout) decides
+  which country's nav/footer to render by checking `usePathname()` against `/<cc>` prefixes —
+  this is deliberately simpler than nesting nested `layout.tsx` files per country (which would
+  require moving Mexico's existing page files into a route group). Add a new country's nav/footer
+  branch here, and add the country to `lib/paises.ts` for the country switcher.
+- **Reuse first**: `lib/tarifa.ts` (`buscarRenglon`), `lib/og.tsx`, `lib/seo.ts`, `lib/jsonld.tsx`,
+  `components/CampoNumerico.tsx`, `components/CampoSelect.tsx`, and
+  `components/CalculadorasRelacionadas.tsx` are all already country-agnostic — use them for any
+  new country's calculators instead of writing per-country versions.
+- **Data verification bar is the same or higher** for a new country's data as it was for Mexico's
+  IMSS: cross-check every fiscal/labor figure against ≥2 independent sources, and if a shortcut
+  constant (like a bracket's pre-summed "cuota fija" equivalent) can't be verified for internal
+  mathematical consistency, prefer computing it from first principles (e.g. true marginal bracket
+  iteration, as `lib/co/retencion.ts` does) over trusting an unverifiable shortcut. Show the user a
+  concrete worked numeric example for sign-off before building UI on top of new country data.
