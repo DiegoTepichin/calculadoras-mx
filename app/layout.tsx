@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Script from "next/script";
 import "./globals.css";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_NAME, SITE_URL, ADSENSE_CLIENT_ID } from "@/lib/site";
 import { JsonLd } from "@/lib/jsonld";
 import { websiteSchema } from "@/lib/seo";
 
@@ -28,6 +29,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es-MX">
       <body className="min-h-screen flex flex-col bg-white text-slate-900 antialiased">
+        <Script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
+          crossOrigin="anonymous"
+          strategy="beforeInteractive"
+        />
         <JsonLd data={websiteSchema()} />
         <header className="border-b border-slate-200">
           <nav className="mx-auto max-w-4xl px-4 py-4 flex items-center justify-between">
