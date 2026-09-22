@@ -1,16 +1,29 @@
 import type { Metadata } from "next";
 import FiniquitoForm from "@/components/FiniquitoForm";
+import CalculadorasRelacionadas from "@/components/CalculadorasRelacionadas";
+import { JsonLd } from "@/lib/jsonld";
+import { webApplicationSchema, breadcrumbSchema } from "@/lib/seo";
+
+const TITULO = "Calculadora de finiquito 2026";
+const DESCRIPCION =
+  "Calcula tu finiquito 2026: salarios pendientes, vacaciones no disfrutadas, prima vacacional y aguinaldo proporcional, según la Ley Federal del Trabajo.";
 
 export const metadata: Metadata = {
-  title: "Calculadora de finiquito 2026",
-  description:
-    "Calcula tu finiquito 2026: salarios pendientes, vacaciones no disfrutadas, prima vacacional y aguinaldo proporcional, según la Ley Federal del Trabajo.",
+  title: TITULO,
+  description: DESCRIPCION,
   alternates: { canonical: "/calculadora/finiquito" },
 };
 
 export default function FiniquitoPage() {
   return (
     <div>
+      <JsonLd data={webApplicationSchema({ nombre: TITULO, descripcion: DESCRIPCION, ruta: "/calculadora/finiquito" })} />
+      <JsonLd
+        data={breadcrumbSchema([
+          { nombre: "Inicio", ruta: "/" },
+          { nombre: TITULO, ruta: "/calculadora/finiquito" },
+        ])}
+      />
       <h1 className="text-2xl font-bold tracking-tight mb-2">Calculadora de finiquito 2026</h1>
       <p className="text-slate-600 mb-8 max-w-2xl">
         Estima cuánto te corresponde al terminar una relación laboral por separación voluntaria
@@ -56,6 +69,13 @@ export default function FiniquitoPage() {
           revisa siempre tu contrato y, si tienes dudas, consulta a un abogado laboral.
         </p>
       </article>
+
+      <CalculadorasRelacionadas
+        items={[
+          { href: "/calculadora/aguinaldo", titulo: "Calculadora de aguinaldo 2026" },
+          { href: "/calculadora/nomina", titulo: "Calculadora de nómina completa 2026" },
+        ]}
+      />
     </div>
   );
 }

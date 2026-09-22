@@ -1,16 +1,40 @@
 import type { Metadata } from "next";
 import ResicoForm from "@/components/ResicoForm";
+import CalculadorasRelacionadas from "@/components/CalculadorasRelacionadas";
+import { JsonLd } from "@/lib/jsonld";
+import { webApplicationSchema, breadcrumbSchema, howToSchema } from "@/lib/seo";
+
+const TITULO = "Calculadora RESICO 2026 (personas físicas)";
+const DESCRIPCION =
+  "Calcula tu ISR mensual bajo RESICO 2026 con la tasa fija de tu rango de ingresos (1% a 2.5%), según el Art. 113-E de la LISR. Gratis e instantáneo.";
 
 export const metadata: Metadata = {
-  title: "Calculadora RESICO 2026 (personas físicas)",
-  description:
-    "Calcula tu ISR mensual bajo RESICO 2026 con la tasa fija de tu rango de ingresos (1% a 2.5%), según el Art. 113-E de la LISR. Gratis e instantáneo.",
+  title: TITULO,
+  description: DESCRIPCION,
   alternates: { canonical: "/calculadora/resico" },
 };
 
 export default function ResicoPage() {
   return (
     <div>
+      <JsonLd data={webApplicationSchema({ nombre: TITULO, descripcion: DESCRIPCION, ruta: "/calculadora/resico" })} />
+      <JsonLd
+        data={breadcrumbSchema([
+          { nombre: "Inicio", ruta: "/" },
+          { nombre: "Calculadora RESICO 2026", ruta: "/calculadora/resico" },
+        ])}
+      />
+      <JsonLd
+        data={howToSchema({
+          nombre: "Cómo calcular el ISR en RESICO",
+          descripcion: DESCRIPCION,
+          pasos: [
+            "Suma los ingresos efectivamente cobrados en el mes (no facturados, cobrados).",
+            "Ubica ese total en la tabla de RESICO, que tiene 5 rangos con tasas de 1% a 2.5%.",
+            "Aplica la tasa del rango al ingreso total del mes, no solo al excedente sobre el límite inferior del rango.",
+          ],
+        })}
+      />
       <h1 className="text-2xl font-bold tracking-tight mb-2">Calculadora RESICO 2026</h1>
       <p className="text-slate-600 mb-8 max-w-2xl">
         Ingresa lo que cobraste en el mes para estimar tu ISR bajo el Régimen Simplificado de
@@ -48,6 +72,13 @@ export default function ResicoPage() {
           RESICO según tu actividad — consulta los requisitos del Art. 113-E LISR con tu contador.
         </p>
       </article>
+
+      <CalculadorasRelacionadas
+        items={[
+          { href: "/calculadora/isr", titulo: "Calculadora de ISR mensual 2026" },
+          { href: "/calculadora/nomina", titulo: "Calculadora de nómina completa 2026" },
+        ]}
+      />
     </div>
   );
 }
