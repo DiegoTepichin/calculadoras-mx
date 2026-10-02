@@ -1,7 +1,7 @@
 // Cuotas obrero-patronales del IMSS 2026. Fuente: Ley del Seguro Social (arts. 25, 28, 73, 74,
 // 106, 107, 147, 168, 211-212) y Ley del Infonavit (art. 29 fracc. II) para las tasas fijas;
 // Segundo Transitorio del Decreto de reforma a la LSS (16-dic-2020) para la tabla escalonada de
-// Cesantía en Edad Avanzada y Vejez (CEAV) patronal. Ver memoria "datos_fiscales_2026_mx.md".
+// Cesantía en Edad Avanzada y Vejez (CEAV) patronal. See docs/DATA_SOURCES.md.
 // IMPORTANTE: re-verificar cada año contra la fuente oficial antes de reusar.
 
 // Tope de cotización: ningún SBC (Salario Base de Cotización) puede rebasar 25 UMA (Art. 28 LSS).
