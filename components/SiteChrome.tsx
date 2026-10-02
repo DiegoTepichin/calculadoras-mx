@@ -34,6 +34,8 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
                 <Link href="/calculadora/finiquito" className="hover:text-emerald-600">Finiquito</Link>
                 <Link href="/calculadora/uma" className="hover:text-emerald-600">UMA</Link>
                 <Link href="/calculadora/imss-patronal" className="hover:text-emerald-600">IMSS patronal</Link>
+                <Link href="/calculadora/horas-extra" className="hover:text-emerald-600">Horas extra</Link>
+                <Link href="/reforma-40-horas" className="hover:text-emerald-600">Reforma 40 h</Link>
               </>
             )}
             <Link href={otroPais.ruta} className="hover:text-emerald-600">
