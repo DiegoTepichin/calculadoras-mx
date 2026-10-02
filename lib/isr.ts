@@ -1,4 +1,5 @@
-import { TARIFA_ISR_MENSUAL_2026, SUBSIDIO_EMPLEO_MENSUAL_2026 } from "@/data/isr-2026";
+import { TARIFA_ISR_MENSUAL_2026, SUBSIDIO_EMPLEO_2026 } from "@/data/isr-2026";
+import { UMA_2026 } from "@/data/constantes-2026";
 import { buscarRenglon } from "@/lib/tarifa";
 
 export interface ResultadoISR {
@@ -29,8 +30,12 @@ export function calcularISRMensual(ingresoMensual: number): ResultadoISR {
   const excedente = ingreso - renglonISR.limiteInferior;
   const isrCausado = renglonISR.cuotaFija + excedente * renglonISR.porcentajeExcedente;
 
-  const { renglon: renglonSubsidio } = buscarRenglon(SUBSIDIO_EMPLEO_MENSUAL_2026, ingreso);
-  const subsidioAplicado = renglonSubsidio.subsidio;
+  // The subsidy only offsets ISR; any excess over the ISR owed is not paid to the worker.
+  const califica = ingreso > 0 && ingreso <= SUBSIDIO_EMPLEO_2026.limiteIngresoMensual;
+  const subsidioMaximo = califica
+    ? Math.round(UMA_2026.mensual * SUBSIDIO_EMPLEO_2026.porcentajeUmaMensual * 100) / 100
+    : 0;
+  const subsidioAplicado = Math.min(subsidioMaximo, Math.round(isrCausado * 100) / 100);
 
   const isrAPagar = Math.max(0, isrCausado - subsidioAplicado);
   const ingresoNeto = ingreso - isrAPagar;

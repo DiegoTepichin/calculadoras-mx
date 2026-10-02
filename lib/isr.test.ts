@@ -20,9 +20,10 @@ describe("calcularISRMensual", () => {
     const r = calcularISRMensual(10000);
     expect(r.renglonAplicado).toBe(3);
     expect(r.isrCausado).toBeCloseTo(729.02, 2);
-    expect(r.subsidioAplicado).toBe(0);
-    expect(r.isrAPagar).toBeCloseTo(729.02, 2);
-    expect(r.ingresoNeto).toBeCloseTo(9270.98, 2);
+    // 2026 subsidy = 3,566.22 × 15.02% = 535.65 (income is under the $11,492.66 cap)
+    expect(r.subsidioAplicado).toBeCloseTo(535.65, 2);
+    expect(r.isrAPagar).toBeCloseTo(193.37, 2);
+    expect(r.ingresoNeto).toBeCloseTo(9806.63, 2);
   });
 
   it("expone los valores crudos del renglón aplicado para el desglose paso a paso", () => {
@@ -34,6 +35,18 @@ describe("calcularISRMensual", () => {
     // cuotaFijaRenglon + excedente * porcentajeExcedenteRenglon debe reconstruir isrCausado
     const reconstruido = r.cuotaFijaRenglon + r.excedente * r.porcentajeExcedenteRenglon;
     expect(reconstruido).toBeCloseTo(r.isrCausado, 2);
+  });
+
+  it("caps the subsidy at the ISR owed (it is never paid out)", () => {
+    const r = calcularISRMensual(7000);
+    expect(r.isrCausado).toBeCloseTo(410.17, 2);
+    expect(r.subsidioAplicado).toBeCloseTo(410.17, 2);
+    expect(r.isrAPagar).toBe(0);
+  });
+
+  it("grants no subsidy above the monthly income cap", () => {
+    expect(calcularISRMensual(11492.66).subsidioAplicado).toBeCloseTo(535.65, 2);
+    expect(calcularISRMensual(11492.67).subsidioAplicado).toBe(0);
   });
 
   it("aplica el subsidio para el empleo en ingresos bajos", () => {
