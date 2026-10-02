@@ -36,6 +36,16 @@ const calculadoras = [
     titulo: "Calculadora de cuotas IMSS obrero-patronales 2026",
     descripcion: "Para empleadores: calcula la cuota patronal del IMSS rama por rama según el SBC y la clase de riesgo.",
   },
+  {
+    href: "/calculadora/horas-extra",
+    titulo: "Calculadora de horas extra 2026–2027",
+    descripcion: "Horas dobles y triples con los nuevos límites de la reforma de 40 horas, año por año.",
+  },
+  {
+    href: "/reforma-40-horas",
+    titulo: "Guía de la reforma de 40 horas",
+    descripcion: "Calendario de reducción 2026–2030, reglas de horas extra y registro electrónico obligatorio desde 2027.",
+  },
 ];
 
 export default function HomePage() {
