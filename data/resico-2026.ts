@@ -1,7 +1,7 @@
 // Tarifa RESICO (Régimen Simplificado de Confianza) para personas físicas, ISR mensual 2026.
 // Fuente: Art. 113-E LISR / Anexo 8 de la Resolución Miscelánea Fiscal. Estas tasas no han
 // cambiado desde que el régimen entró en vigor en 2022 (a diferencia de la tarifa general del
-// Art. 96, no se ajustan por inflación). Ver memoria "datos_fiscales_2026_mx.md".
+// Art. 96, no se ajustan por inflación). See docs/DATA_SOURCES.md.
 // IMPORTANTE: re-verificar cada año contra la fuente oficial antes de reusar.
 
 export interface RenglonResico {
