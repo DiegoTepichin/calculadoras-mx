@@ -46,3 +46,7 @@ export function diasVacacionesPorAntiguedad(aniosCumplidos: number): number {
 
 export const PRIMA_VACACIONAL_MINIMA = 0.25; // Art. 80 LFT
 export const AGUINALDO_DIAS_MINIMOS = 15; // Art. 87 LFT
+
+// Days in the 2026 calendar year (not a leap year). Proportional aguinaldo divides by the
+// actual length of the year: 366 in leap years (Aspel NOI payroll docs, calculadorasat.org).
+export const DIAS_DEL_ANIO_2026 = 365;

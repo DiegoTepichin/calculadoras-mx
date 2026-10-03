@@ -50,6 +50,10 @@ export default function AguinaldoPage() {
           ejemplo, con un salario diario de $500 y 180 días trabajados en el año: 15 × 180 ÷ 365
           = 7.4 días, es decir $3,698.63 pesos de aguinaldo.
         </p>
+        <p>
+          El divisor es el número de días del año: 365 en 2026, o 366 en un año bisiesto. Si
+          trabajaste el año completo, el resultado son exactamente tus días de aguinaldo anual.
+        </p>
         <p className="text-sm text-slate-500">
           El aguinaldo está exento de ISR hasta el equivalente a 30 UMA (Art. 93 fracción XIV
           LISR); si tu aguinaldo excede ese monto, la diferencia se acumula a tus ingresos
