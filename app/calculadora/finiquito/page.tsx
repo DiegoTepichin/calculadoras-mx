@@ -6,7 +6,7 @@ import { webApplicationSchema, breadcrumbSchema } from "@/lib/seo";
 
 const TITULO = "Calculadora de finiquito 2026";
 const DESCRIPCION =
-  "Calcula tu finiquito 2026: salarios pendientes, vacaciones no disfrutadas, prima vacacional y aguinaldo proporcional, según la Ley Federal del Trabajo.";
+  "Calcula tu finiquito 2026: salarios pendientes, vacaciones no disfrutadas y proporcionales, prima vacacional y aguinaldo proporcional, según la Ley Federal del Trabajo.";
 
 export const metadata: Metadata = {
   title: TITULO,
@@ -28,7 +28,7 @@ export default function FiniquitoPage() {
       <p className="text-slate-600 mb-8 max-w-2xl">
         Estima cuánto te corresponde al terminar una relación laboral por separación voluntaria
         o sin responsabilidad para el patrón: salarios pendientes, vacaciones no disfrutadas,
-        prima vacacional y aguinaldo proporcional.
+        vacaciones proporcionales, prima vacacional y aguinaldo proporcional.
       </p>
       <FiniquitoForm />
 
@@ -40,7 +40,7 @@ export default function FiniquitoPage() {
           que aplica en despidos injustificados e incluye además una indemnización de 3 meses
           de salario más 20 días por año trabajado — esta calculadora NO cubre ese escenario.
         </p>
-        <p>El finiquito se compone de cuatro partes:</p>
+        <p>El finiquito se compone de cinco partes:</p>
         <ol className="list-decimal pl-5 space-y-2">
           <li>
             <strong>Salarios pendientes</strong>: los días que ya trabajaste y aún no te han
@@ -51,8 +51,15 @@ export default function FiniquitoPage() {
             correspondían según tu antigüedad (tabla del Art. 76 LFT) y que no tomaste.
           </li>
           <li>
-            <strong>Prima vacacional</strong>: un 25% adicional sobre el pago de esas vacaciones
-            pendientes (Art. 80 LFT — es el mínimo legal, algunos contratos ofrecen más).
+            <strong>Vacaciones proporcionales</strong>: la parte de las vacaciones del año de
+            servicio en curso que ya generaste (Art. 79 LFT). Se calcula con los días que te
+            tocarían al cumplir tu siguiente aniversario × los días trabajados desde el último ÷
+            365. Aplica aunque no hayas cumplido tu primer año.
+          </li>
+          <li>
+            <strong>Prima vacacional</strong>: un 25% adicional sobre el pago de las vacaciones
+            pendientes y de las proporcionales (Art. 80 LFT — es el mínimo legal, algunos contratos
+            ofrecen más).
           </li>
           <li>
             <strong>Aguinaldo proporcional</strong>: la parte del aguinaldo del año en curso que
