@@ -1,6 +1,6 @@
 // Constantes fiscales/laborales de Colombia 2026.
 // Fuente: DIAN, Resolución 000238 del 15-dic-2025 (UVT); Decreto 1469 de 2025 (salario mínimo);
-// Decreto 1470 de 2025 (auxilio de transporte). Ver memoria "datos_fiscales_2026_co.md".
+// Decreto 1470 de 2025 (auxilio de transporte). See docs/DATA_SOURCES.md.
 // IMPORTANTE: re-verificar cada año contra la fuente oficial antes de reusar.
 
 export const UVT_2026 = {

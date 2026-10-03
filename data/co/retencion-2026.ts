@@ -1,7 +1,7 @@
 // Tabla de retención en la fuente para asalariados, procedimiento 1 (Art. 383 Estatuto
 // Tributario). Los rangos están expresados en UVT porque la estructura de la tabla (límites y
 // tarifas) es fija desde la Ley 2277 de 2022 — solo cambia el valor en pesos de la UVT cada año
-// (ver data/co/constantes-2026.ts). Ver memoria "datos_fiscales_2026_co.md".
+// (ver data/co/constantes-2026.ts). See docs/DATA_SOURCES.md.
 // IMPORTANTE: re-verificar cada año contra la fuente oficial (DIAN) antes de reusar.
 //
 // NOTA: algunas fuentes secundarias publican constantes aditivas ("+10 UVT", "+69 UVT"...) para

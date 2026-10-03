@@ -1,5 +1,5 @@
 // Tarifa de ISR mensual 2026 para sueldos y salarios.
-// Fuente: Resolución Miscelánea Fiscal 2026, SAT. Ver memoria "datos_fiscales_2026_mx.md".
+// Fuente: Anexo 8 de la Resolución Miscelánea Fiscal 2026, SAT. See docs/DATA_SOURCES.md.
 export interface RenglonTarifa {
   limiteInferior: number;
   limiteSuperior: number; // Infinity para el último renglón
@@ -21,23 +21,14 @@ export const TARIFA_ISR_MENSUAL_2026: RenglonTarifa[] = [
   { limiteInferior: 425642.0, limiteSuperior: Infinity, cuotaFija: 133488.54, porcentajeExcedente: 0.35 },
 ];
 
-// Subsidio para el empleo mensual 2026 (misma fuente).
-export interface RenglonSubsidio {
-  limiteInferior: number;
-  limiteSuperior: number;
-  subsidio: number;
-}
-
-export const SUBSIDIO_EMPLEO_MENSUAL_2026: RenglonSubsidio[] = [
-  { limiteInferior: 0.01, limiteSuperior: 1768.96, subsidio: 407.02 },
-  { limiteInferior: 1768.97, limiteSuperior: 2653.38, subsidio: 406.83 },
-  { limiteInferior: 2653.39, limiteSuperior: 3472.84, subsidio: 406.62 },
-  { limiteInferior: 3472.85, limiteSuperior: 3537.87, subsidio: 392.77 },
-  { limiteInferior: 3537.88, limiteSuperior: 4446.15, subsidio: 382.46 },
-  { limiteInferior: 4446.16, limiteSuperior: 4717.18, subsidio: 354.23 },
-  { limiteInferior: 4717.19, limiteSuperior: 5335.42, subsidio: 324.87 },
-  { limiteInferior: 5335.43, limiteSuperior: 6224.67, subsidio: 294.63 },
-  { limiteInferior: 6224.68, limiteSuperior: 7113.9, subsidio: 253.54 },
-  { limiteInferior: 7113.91, limiteSuperior: 7382.33, subsidio: 217.61 },
-  { limiteInferior: 7382.34, limiteSuperior: Infinity, subsidio: 0.0 },
-];
+// Employment subsidy (subsidio para el empleo) 2026. Since May 2024 it is no longer a bracket
+// table: it is a flat percentage of the monthly UMA, granted only to workers whose monthly
+// taxable income does not exceed a cap, and applied against the month's ISR (never paid out).
+// Source: "Decreto por el que se modifica el diverso que otorga el subsidio para el empleo",
+// DOF Dec 2025 (https://sidof.segob.gob.mx/notas/docFuente/5777649), Art. Segundo; cross-checked
+// against IDC Online and El Contribuyente. January 2026 used 15.59% of the 2025 UMA instead
+// (Transitorio Segundo); this site models February–December.
+export const SUBSIDIO_EMPLEO_2026 = {
+  porcentajeUmaMensual: 0.1502,
+  limiteIngresoMensual: 11492.66,
+};
