@@ -12,6 +12,7 @@ export default function FiniquitoForm() {
   const [anios, setAnios] = useState("2");
   const [vacacionesTomadas, setVacacionesTomadas] = useState("0");
   const [diasLaborados, setDiasLaborados] = useState("180");
+  const [diasAniversario, setDiasAniversario] = useState("120");
 
   const calculo = useMemo(() => {
     const s = parseMontoNoNegativo(salario);
@@ -19,23 +20,30 @@ export default function FiniquitoForm() {
     const a = parseMontoNoNegativo(anios);
     const vt = parseMontoNoNegativo(vacacionesTomadas);
     const dl = parseMontoNoNegativo(diasLaborados);
-    if (s === null || dp === null || a === null || vt === null || dl === null) return null;
+    const da = parseMontoNoNegativo(diasAniversario);
+    if (s === null || dp === null || a === null || vt === null || dl === null || da === null) return null;
     return {
       salario: s,
       diasPendientes: dp,
+      diasAniversario: Math.min(da, 365),
       resultado: calcularFiniquito({
         salarioDiario: s,
         diasSalarioPendientes: dp,
         aniosAntiguedadCumplidos: a,
         diasVacacionesYaTomadosEsteCiclo: vt,
         diasLaboradosEnElAnioActual: dl,
+        diasDesdeUltimoAniversario: da,
       }),
     };
-  }, [salario, diasPendientes, anios, vacacionesTomadas, diasLaborados]);
+  }, [salario, diasPendientes, anios, vacacionesTomadas, diasLaborados, diasAniversario]);
 
-  const diasQueTocan = useMemo(() => {
+  const { diasQueTocan, diasAnioEnCurso } = useMemo(() => {
     const a = parseMontoNoNegativo(anios);
-    return a === null ? 0 : diasVacacionesPorAntiguedad(a);
+    const cumplidos = a === null ? 0 : Math.floor(a);
+    return {
+      diasQueTocan: diasVacacionesPorAntiguedad(cumplidos),
+      diasAnioEnCurso: diasVacacionesPorAntiguedad(cumplidos + 1),
+    };
   }, [anios]);
 
   return (
@@ -68,6 +76,15 @@ export default function FiniquitoForm() {
           value={vacacionesTomadas}
           onChange={setVacacionesTomadas}
           inputMode="numeric"
+          hint="De los que te tocaron al cumplir tu último aniversario"
+        />
+        <CampoNumerico
+          id="diasAniversario"
+          label="Días trabajados desde tu último aniversario laboral"
+          value={diasAniversario}
+          onChange={setDiasAniversario}
+          inputMode="numeric"
+          hint={`Para las vacaciones proporcionales del año en curso (${diasAnioEnCurso} días/año, Art. 79 LFT). Si no has cumplido un año, cuenta desde tu fecha de ingreso.`}
         />
         <CampoNumerico
           id="diasLaborados"
@@ -76,7 +93,6 @@ export default function FiniquitoForm() {
           onChange={setDiasLaborados}
           inputMode="numeric"
           hint="Para calcular el aguinaldo proporcional del año en curso"
-          className="sm:col-span-2"
         />
       </div>
 
@@ -89,6 +105,10 @@ export default function FiniquitoForm() {
           <div className="flex justify-between text-sm">
             <span className="text-slate-600">Vacaciones no disfrutadas ({calculo.resultado.diasVacacionesPendientes} días)</span>
             <span className="font-medium">{formatoMXN(calculo.resultado.pagoVacacionesPendientes)}</span>
+          </div>
+          <div className="flex justify-between text-sm">
+            <span className="text-slate-600">Vacaciones proporcionales del año en curso ({calculo.resultado.diasVacacionesProporcionales} días)</span>
+            <span className="font-medium">{formatoMXN(calculo.resultado.pagoVacacionesProporcionales)}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-slate-600">Prima vacacional (25%)</span>
@@ -123,7 +143,13 @@ export default function FiniquitoForm() {
                 {formatoMXN(calculo.resultado.pagoVacacionesPendientes)}
               </li>
               <li>
-                Prima vacacional = {formatoMXN(calculo.resultado.pagoVacacionesPendientes)} × 25% ={" "}
+                Vacaciones proporcionales = {formatoMXN(calculo.salario)} × ({diasAnioEnCurso} días ×{" "}
+                {calculo.diasAniversario} días ÷ 365) ={" "}
+                {formatoMXN(calculo.resultado.pagoVacacionesProporcionales)}
+              </li>
+              <li>
+                Prima vacacional = ({formatoMXN(calculo.resultado.pagoVacacionesPendientes)} +{" "}
+                {formatoMXN(calculo.resultado.pagoVacacionesProporcionales)}) × 25% ={" "}
                 {formatoMXN(calculo.resultado.primaVacacional)}
               </li>
               <li>
@@ -134,6 +160,7 @@ export default function FiniquitoForm() {
               <li>
                 Total = {formatoMXN(calculo.resultado.salariosPendientes)} +{" "}
                 {formatoMXN(calculo.resultado.pagoVacacionesPendientes)} +{" "}
+                {formatoMXN(calculo.resultado.pagoVacacionesProporcionales)} +{" "}
                 {formatoMXN(calculo.resultado.primaVacacional)} +{" "}
                 {formatoMXN(calculo.resultado.aguinaldoProporcional)} ={" "}
                 {formatoMXN(calculo.resultado.totalFiniquito)}
