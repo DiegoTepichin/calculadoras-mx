@@ -1,4 +1,4 @@
-import { AGUINALDO_DIAS_MINIMOS } from "@/data/constantes-2026";
+import { AGUINALDO_DIAS_MINIMOS, DIAS_DEL_ANIO_2026 } from "@/data/constantes-2026";
 
 export interface ResultadoAguinaldo {
   diasProporcionales: number;
@@ -9,16 +9,19 @@ export interface ResultadoAguinaldo {
 
 /**
  * Calcula el aguinaldo proporcional según días laborados en el año (Art. 87 LFT).
- * diasLaboradosEnElAnio: días naturales trabajados en el año calendario (máx. 365/366).
+ * diasLaboradosEnElAnio: días naturales trabajados en el año calendario.
  * diasAguinaldoAnual: días de aguinaldo que paga la empresa por año completo (mínimo legal 15).
+ * diasDelAnio: length of the calendar year (366 in leap years). Days worked are capped at it,
+ * so a full year never yields more than the annual aguinaldo.
  */
 export function calcularAguinaldo(
   salarioDiario: number,
   diasLaboradosEnElAnio: number,
-  diasAguinaldoAnual: number = AGUINALDO_DIAS_MINIMOS
+  diasAguinaldoAnual: number = AGUINALDO_DIAS_MINIMOS,
+  diasDelAnio: number = DIAS_DEL_ANIO_2026
 ): ResultadoAguinaldo {
-  const dias = Math.min(Math.max(0, diasLaboradosEnElAnio), 366);
-  const diasProporcionales = (diasAguinaldoAnual * dias) / 365;
+  const dias = Math.min(Math.max(0, diasLaboradosEnElAnio), diasDelAnio);
+  const diasProporcionales = (diasAguinaldoAnual * dias) / diasDelAnio;
   const aguinaldoBruto = salarioDiario * diasProporcionales;
 
   return {

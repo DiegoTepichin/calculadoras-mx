@@ -33,6 +33,7 @@ export default function AguinaldoForm() {
           value={dias}
           onChange={setDias}
           inputMode="numeric"
+          hint="Máximo 365: 2026 no es año bisiesto"
         />
         <CampoNumerico
           id="diasAguinaldo"
