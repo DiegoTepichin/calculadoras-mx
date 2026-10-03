@@ -42,3 +42,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local, per-machine artifacts
+node_modules.nosync/
+Icon?
+
+# agent instructions (kept local, not versioned)
+/CLAUDE.md
+/AGENTS.md

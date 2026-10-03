@@ -1,5 +1,5 @@
 // Fuente: INEGI (UMA), CONASAMI (salario mínimo), LFT Art. 76/80/87 (vacaciones/aguinaldo).
-// Ver memoria del proyecto "datos_fiscales_2026_mx.md" para fuentes exactas.
+// See docs/DATA_SOURCES.md.
 // IMPORTANTE: re-verificar cada año contra la fuente oficial antes de reusar.
 
 export const UMA_2026 = {

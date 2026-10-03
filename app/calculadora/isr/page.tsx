@@ -74,8 +74,10 @@ export default function IsrPage() {
         </ol>
         <p>
           El subsidio para el empleo es un estímulo que reduce la retención de quienes ganan
-          menos: es máximo para los ingresos más bajos y desaparece por completo a partir de
-          $7,382.34 mensuales.
+          menos. En 2026 equivale al 15.02% de la UMA mensual ($535.65) y aplica si tu ingreso
+          mensual no pasa de $11,492.66. Solo se resta del ISR: si es mayor que tu ISR causado,
+          la retención queda en $0, pero la diferencia no se te paga. (En enero de 2026 se usó
+          el 15.59% de la UMA 2025.)
         </p>
         <p className="text-sm text-slate-500">
           Esta calculadora aplica el régimen general de sueldos y salarios. No cubre honorarios,
