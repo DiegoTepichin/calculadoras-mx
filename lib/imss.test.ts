@@ -3,6 +3,8 @@ import {
   calcularCuotaObreraDiaria,
   calcularCuotaPatronalDiaria,
   determinarTasaCeavPatronal,
+  factorIntegracionMinimo,
+  calcularSbcMinimoDeLey,
 } from "@/lib/imss";
 import { UMA_2026, SALARIO_MINIMO_2026 } from "@/data/constantes-2026";
 
@@ -75,5 +77,23 @@ describe("calcularCuotaPatronalDiaria", () => {
     const enElTope = calcularCuotaPatronalDiaria(tope, 0.005);
     const arribaDelTope = calcularCuotaPatronalDiaria(tope + 10000, 0.005);
     expect(arribaDelTope).toEqual(enElTope);
+  });
+});
+
+describe("factorIntegracionMinimo (Art. 27 LSS)", () => {
+  it("matches the published legal-minimum factors by seniority", () => {
+    // 1 + (15 + vacation days × 25%) ÷ 365
+    expect(factorIntegracionMinimo(0)).toBeCloseTo(1.0493, 4); // year 1: 12 days
+    expect(factorIntegracionMinimo(1)).toBeCloseTo(1.0507, 4); // year 2: 14 days
+    expect(factorIntegracionMinimo(2)).toBeCloseTo(1.0521, 4); // year 3: 16 days
+    expect(factorIntegracionMinimo(4)).toBeCloseTo(1.0548, 4); // year 5: 20 days
+    expect(factorIntegracionMinimo(5)).toBeCloseTo(1.0562, 4); // years 6-10: 22 days
+  });
+
+  it("integrates the daily wage into the SBC", () => {
+    // 500 × (1 + 18 ÷ 365) = 524.6575
+    expect(calcularSbcMinimoDeLey(500, 0)).toBe(524.66);
+    // Employee quota on that SBC: 524.66 × 2.375% + (524.66 − 3 × 117.31) × 0.4% = 13.15
+    expect(calcularCuotaObreraDiaria(524.66).total).toBe(13.15);
   });
 });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calcularISRMensual } from "@/lib/isr";
+import { calcularISRMensual, calcularISRPeriodo } from "@/lib/isr";
 
 describe("calcularISRMensual", () => {
   it("no explota ni cae en el último renglón (35%) para un ingreso de $0", () => {
@@ -60,5 +60,54 @@ describe("calcularISRMensual", () => {
     expect(r.renglonAplicado).toBe(11);
     expect(r.isrCausado).toBeCloseTo(334513.84, 2);
     expect(r.subsidioAplicado).toBe(0);
+  });
+});
+
+describe("calcularISRPeriodo (Anexo 8 RMF 2026 tariffs by pay period)", () => {
+  it("uses the 15-day tariff for a biweekly payment", () => {
+    // $7,500 falls in 7,225.96–8,651.40: 660.75 + (7,500 − 7,225.96) × 17.92% = 709.86
+    // Monthly equivalent 7,500 ÷ 15 × 30.4 = 15,200 > 11,492.66 → no subsidy
+    const r = calcularISRPeriodo(7500, "quincenal");
+    expect(r.renglonAplicado).toBe(5);
+    expect(r.isrCausado).toBeCloseTo(709.86, 2);
+    expect(r.subsidioAplicado).toBe(0);
+    expect(r.isrAPagar).toBeCloseTo(709.86, 2);
+  });
+
+  it("uses the 7-day tariff and prorates the subsidy for a weekly payment", () => {
+    // $2,450 falls in 1,650.68–2,900.87: 96.95 + (2,450 − 1,650.68) × 10.88% = 183.92
+    // Monthly equivalent 2,450 ÷ 7 × 30.4 = 10,640 ≤ 11,492.66 → subsidy 535.65 ÷ 30.4 × 7 = 123.34
+    const r = calcularISRPeriodo(2450, "semanal");
+    expect(r.renglonAplicado).toBe(3);
+    expect(r.isrCausado).toBeCloseTo(183.92, 2);
+    expect(r.subsidioAplicado).toBeCloseTo(123.34, 2);
+    expect(r.isrAPagar).toBeCloseTo(60.58, 2);
+  });
+
+  it("prorates the subsidy to 264.30 for 15 days", () => {
+    // $5,000 biweekly → 10,133.33 monthly equivalent; 535.65 ÷ 30.4 × 15 = 264.30
+    // ISR: 207.75 + (5,000 − 3,537.16) × 10.88% = 366.91
+    const r = calcularISRPeriodo(5000, "quincenal");
+    expect(r.isrCausado).toBeCloseTo(366.91, 2);
+    expect(r.subsidioAplicado).toBeCloseTo(264.3, 2);
+    expect(r.isrAPagar).toBeCloseTo(102.61, 2);
+  });
+
+  it("matches calcularISRMensual for the monthly period", () => {
+    expect(calcularISRPeriodo(10000, "mensual")).toEqual(calcularISRMensual(10000));
+  });
+});
+
+describe("tariff bracket boundaries", () => {
+  it("uses the official row 5/6 boundary of the monthly tariff (17,533.64 | 17,533.65)", () => {
+    expect(calcularISRMensual(17533.64).renglonAplicado).toBe(5);
+    expect(calcularISRMensual(17533.65).renglonAplicado).toBe(6);
+  });
+
+  it("keeps amounts with fractions of a cent between two rows in the lower row", () => {
+    // Regression: 844.595 matched no row and fell through to the last one (35%).
+    const r = calcularISRMensual(844.595);
+    expect(r.renglonAplicado).toBe(1);
+    expect(r.isrCausado).toBeCloseTo(16.22, 2);
   });
 });
