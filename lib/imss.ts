@@ -4,9 +4,32 @@ import {
   CUOTA_PATRONAL_2026,
   CEAV_PATRONAL_2026,
 } from "@/data/imss-2026";
-import { UMA_2026, SALARIO_MINIMO_2026 } from "@/data/constantes-2026";
+import {
+  UMA_2026,
+  SALARIO_MINIMO_2026,
+  AGUINALDO_DIAS_MINIMOS,
+  PRIMA_VACACIONAL_MINIMA,
+  diasVacacionesPorAntiguedad,
+} from "@/data/constantes-2026";
 
 const round2 = (n: number) => Math.round(n * 100) / 100;
+
+/**
+ * Minimum integration factor (Art. 27 LSS): the SBC adds to the daily wage the daily share of
+ * the legal-minimum aguinaldo and vacation premium of the service year in progress.
+ * 1 + (15 + vacation days × 25%) ÷ 365 → 1.0493 in the first year, 1.0507 in the second, etc.
+ * Workers with benefits above the legal minimum (or variable pay) have a higher SBC.
+ */
+export function factorIntegracionMinimo(aniosAntiguedadCumplidos: number): number {
+  const anioEnCurso = Math.floor(Math.max(0, aniosAntiguedadCumplidos)) + 1;
+  const diasPrima = diasVacacionesPorAntiguedad(anioEnCurso) * PRIMA_VACACIONAL_MINIMA;
+  return 1 + (AGUINALDO_DIAS_MINIMOS + diasPrima) / 365;
+}
+
+/** Daily SBC with legal-minimum benefits, before the 25-UMA cap (applied by the quota functions). */
+export function calcularSbcMinimoDeLey(salarioDiario: number, aniosAntiguedadCumplidos: number): number {
+  return round2(Math.max(0, salarioDiario) * factorIntegracionMinimo(aniosAntiguedadCumplidos));
+}
 
 function toparSbc(sbcDiario: number): number {
   const tope = UMA_2026.diario * SBC_TOPE_VECES_UMA;

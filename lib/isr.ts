@@ -1,8 +1,27 @@
-import { TARIFA_ISR_MENSUAL_2026, SUBSIDIO_EMPLEO_2026 } from "@/data/isr-2026";
+import {
+  TARIFA_ISR_MENSUAL_2026,
+  TARIFA_ISR_QUINCENAL_2026,
+  TARIFA_ISR_SEMANAL_2026,
+  SUBSIDIO_EMPLEO_2026,
+  type RenglonTarifa,
+} from "@/data/isr-2026";
 import { UMA_2026 } from "@/data/constantes-2026";
 import { buscarRenglon } from "@/lib/tarifa";
 
+export type PeriodoPago = "semanal" | "quincenal" | "mensual";
+
+// Each pay period has its own official tariff (Anexo 8 RMF). `dias` is the length used to
+// prorate the monthly employment subsidy; `null` means the full monthly amount.
+const PERIODOS: Record<PeriodoPago, { tarifa: RenglonTarifa[]; dias: number | null }> = {
+  semanal: { tarifa: TARIFA_ISR_SEMANAL_2026, dias: 7 },
+  quincenal: { tarifa: TARIFA_ISR_QUINCENAL_2026, dias: 15 },
+  mensual: { tarifa: TARIFA_ISR_MENSUAL_2026, dias: null },
+};
+
+const round2 = (n: number) => Math.round(n * 100) / 100;
+
 export interface ResultadoISR {
+  /** Gross income of the pay period (monthly for calcularISRMensual). */
   ingresoMensual: number;
   isrCausado: number;
   subsidioAplicado: number;
@@ -24,17 +43,29 @@ export interface ResultadoISR {
  * ni retenciones adicionales (IMSS/Infonavit se calculan aparte).
  */
 export function calcularISRMensual(ingresoMensual: number): ResultadoISR {
-  const ingreso = Math.max(0, ingresoMensual);
+  return calcularISRPeriodo(ingresoMensual, "mensual");
+}
 
-  const { renglon: renglonISR, indice } = buscarRenglon(TARIFA_ISR_MENSUAL_2026, ingreso);
+/**
+ * ISR withholding for a weekly, biweekly or monthly pay period, using that period's official
+ * tariff. The employment subsidy is the monthly amount ÷ 30.4 × days of the period, granted
+ * when the period's income, taken to a 30.4-day month, does not exceed the monthly cap.
+ */
+export function calcularISRPeriodo(ingresoPeriodo: number, periodo: PeriodoPago): ResultadoISR {
+  const ingreso = Math.max(0, ingresoPeriodo);
+  const { tarifa, dias } = PERIODOS[periodo];
+  const { diasDelMes, limiteIngresoMensual, porcentajeUmaMensual } = SUBSIDIO_EMPLEO_2026;
+
+  const { renglon: renglonISR, indice } = buscarRenglon(tarifa, ingreso);
   const excedente = ingreso - renglonISR.limiteInferior;
   const isrCausado = renglonISR.cuotaFija + excedente * renglonISR.porcentajeExcedente;
 
   // The subsidy only offsets ISR; any excess over the ISR owed is not paid to the worker.
-  const califica = ingreso > 0 && ingreso <= SUBSIDIO_EMPLEO_2026.limiteIngresoMensual;
-  const subsidioMaximo = califica
-    ? Math.round(UMA_2026.mensual * SUBSIDIO_EMPLEO_2026.porcentajeUmaMensual * 100) / 100
-    : 0;
+  const ingresoMensualEquivalente = dias === null ? ingreso : (ingreso / dias) * diasDelMes;
+  const califica = ingreso > 0 && round2(ingresoMensualEquivalente) <= limiteIngresoMensual;
+  const subsidioMensual = round2(UMA_2026.mensual * porcentajeUmaMensual);
+  const subsidioDelPeriodo = dias === null ? subsidioMensual : round2((subsidioMensual / diasDelMes) * dias);
+  const subsidioMaximo = califica ? subsidioDelPeriodo : 0;
   const subsidioAplicado = Math.min(subsidioMaximo, Math.round(isrCausado * 100) / 100);
 
   const isrAPagar = Math.max(0, isrCausado - subsidioAplicado);

@@ -39,8 +39,10 @@ export default function NominaPage() {
         </p>
         <ol className="list-decimal pl-5 space-y-2">
           <li>
-            <strong>ISR</strong> (Impuesto Sobre la Renta), según la tarifa del Art. 96 LISR, ya
-            con el subsidio para el empleo aplicado si calificas.
+            <strong>ISR</strong> (Impuesto Sobre la Renta), según la tarifa del Art. 96 LISR que
+            corresponde a tu periodo de pago (semanal, quincenal o mensual, Anexo 8 de la RMF
+            2026), ya con el subsidio para el empleo aplicado si calificas. En periodos menores
+            a un mes el subsidio se prorratea: el monto mensual ÷ 30.4 × los días del periodo.
           </li>
           <li>
             <strong>Cuota obrera del IMSS</strong>: tu parte de las cuotas de seguridad social
@@ -54,10 +56,12 @@ export default function NominaPage() {
           </li>
         </ol>
         <p className="text-sm text-slate-500">
-          Esta calculadora asume que tu Salario Base de Cotización es igual a tu salario diario
-          (sin sumar otras prestaciones que también integran el SBC, como bonos o comisiones
-          fijas). No incluye otros descuentos de nómina que dependen de cada empresa (ahorro
-          voluntario, préstamos, seguros privados, etc.).
+          Esta calculadora integra tu Salario Base de Cotización con las prestaciones mínimas de
+          ley (Art. 27 LSS): salario diario × (1 + (15 días de aguinaldo + días de vacaciones ×
+          25% de prima) ÷ 365), es decir un factor de 1.0493 en tu primer año. Si tu empresa da
+          prestaciones superiores, bonos o comisiones, tu SBC real es mayor. El sueldo mensual
+          se toma como 30 días de salario. No incluye otros descuentos de nómina que dependen
+          de cada empresa (ahorro voluntario, préstamos, seguros privados, etc.).
         </p>
       </article>
 
